@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BeltReviewer</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+
+<% if flash[:errors] %>
+  <% flash[:errors].each do |e| %>
+    <%= e %>
+    <br>
+    <br>
+  <% end %>
+<% end %>
+
+<% if current_user %>
+  <form action="/sessions/<%=current_user.id%>" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <input type="hidden" name="_method" value="delete">
+    <input type="submit" value="Log Out">
+  </form>
+<% end %> 
+<br><br>
+<style>
+	table tr:nth-child(odd) td{
+		background: #ffcdd6;
+		padding: 7px 20px;
+	}
+	table tr:nth-child(even) td{
+		background: #ffecef;
+		padding: 7px 20px;
+	}
+#comment-box {
+  border: solid pink;
+  padding: 15px;
+  width: 400px;
+}
+
+</style>
+<%= yield %>
+
+</body>
+</html>

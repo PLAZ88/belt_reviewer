@@ -1,0 +1,172 @@
+<a href="/users/<%=current_user.id%>/edit"><button>Edit Your Profile</button></a>
+<p>Welcome, <%= @user.first_name %></p>
+<h2>Here are some events in your state</h2>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>Host</th>
+			<th>Action/Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @close_events.each do |close| %>
+		<tr>
+			<td><a href='/events/<%= close.id %>'><%= close.name %></a></td>
+			<td><%= close.date.strftime("%b, %d, %Y") %></td>
+			<td><%= close.location %></td>
+			<td><%= close.user.first_name %></td>
+			<td>
+			<% if close.user == current_user %>
+				<form action = "/events/<%= close.id %>" method = "post">
+					<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+					<input type="hidden" name="_method" value="delete">
+					<input type = 'submit' value = 'Delete'>
+				</form>
+				<a href='/events/<%= close.id %>/edit'><button>Edit</button></a>
+			<% end %>
+			<% unless close.user_id == current_user.id %>
+				<% unless close.users.include?(current_user) %>
+					<form action = "/attendees" method = "post">
+					    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+					    <input type="hidden" name="attendee[event_id]" value = "<%= close.id %>">
+						<input type="submit" name="Join" value = "Join">			
+					</form>	
+				<% else %>
+					<form action = "/attendees/<%= close.id %>" method = "post">
+					    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+						<input type="hidden" name="_method" value="delete">
+						<b>Joining</b>
+						<input type="submit" name="Cancel" value = "Cancel">
+					</form>
+				<% end %>
+			<% end %>
+			</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+<br><br>
+<h2>Here are some events in other states</h2>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>State</th>
+			<th>Host</th>
+			<th>Action/Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @far_events.each do |far| %>
+		<tr>
+			<td><a href='/events/<%= far.id %>'><%= far.name %></a></td>
+			<td><%= far.date.strftime("%b, %d, %Y") %></td>
+			<td><%= far.location %></td>
+			<td><%= far.state %></td>
+			<td><%= far.user.first_name %></td>
+			<td>
+			<% if far.user == current_user %>
+				<form action = "/events/<%= far.id %>" method = "post">
+					<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+					<input type="hidden" name="_method" value="delete">
+					<input type = 'submit' value = 'Delete'>
+				</form>
+				<a href='/events/<%= far.id %>/edit'><button>Edit</button></a>
+			<% end %>
+			<% unless far.user_id == current_user.id %>
+				<% unless far.users.include?(current_user) %>
+					<form action = "/attendees" method = "post">
+					    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+					    <input type="hidden" name="attendee[event_id]" value = "<%= far.id %>">
+						<input type="submit" name="Join" value = "Join">			
+					</form>	
+				<% else %>
+					<form action = "/attendees/<%= far.id %>" method = "post">
+					    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+						<input type="hidden" name="_method" value="delete">
+						<b>Joining</b>
+						<input type="submit" name="Cancel" value = "Cancel">
+					</form>
+				<% end %>
+			<% end %>
+			</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<h2>Add an event</h2>
+	<form action = "/events" method = "post">
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		Name:
+		<input type='text' name=event[name]>
+		<br><br>
+		Date:
+		<input type="date" name=event[date]>
+		<br><br>
+		Location:
+		<input type='text' name=event[location]>
+		<br><br>
+		State:
+		<select name="event[state]">
+			<option value='AK'>AK</option>
+			<option value='AL'>AL</option>
+			<option value='AR'>AR</option>
+			<option value='AZ'>AZ</option>
+			<option value='CA'>CA</option>
+			<option value='CO'>CO</option>
+			<option value='CT'>CT</option>
+			<option value='DC'>DC</option>
+			<option value='DE'>DE</option>
+			<option value='FL'>FL</option>
+			<option value='GA'>GA</option>
+			<option value='HI'>HI</option>
+			<option value='IA'>IA</option>
+			<option value='ID'>ID</option>
+			<option value='IL'>IL</option>
+			<option value='IN'>IN</option>
+			<option value='KS'>KS</option>
+			<option value='KY'>KY</option>
+			<option value='LA'>LA</option>
+			<option value='MA'>MA</option>
+			<option value='MD'>MD</option>
+			<option value='ME'>ME</option>
+			<option value='MI'>MI</option>
+			<option value='MN'>MN</option>
+			<option value='MO'>MO</option>
+			<option value='MS'>MS</option>
+			<option value='MT'>MT</option>
+			<option value='NC'>NC</option>
+			<option value='ND'>ND</option>
+			<option value='NE'>NE</option>
+			<option value='NH'>NH</option>
+			<option value='NJ'>NJ</option>
+			<option value='NM'>NM</option>
+			<option value='NV'>NV</option>
+			<option value='NY'>NY</option>
+			<option value='OH'>OH</option>
+			<option value='OK'>OK</option>
+			<option value='OR'>OR</option>
+			<option value='PA'>PA</option>
+			<option value='RI'>RI</option>
+			<option value='SC'>SC</option>
+			<option value='SD'>SD</option>
+			<option value='TN'>TN</option>
+			<option value='TX'>TX</option>
+			<option value='UT'>UT</option>
+			<option value='VA'>VA</option>
+			<option value='VT'>VT</option>
+			<option value='WA'>WA</option>
+			<option value='WI'>WI</option>
+			<option value='WV'>WV</option>
+			<option value='WY'>WY</option>
+		</select>
+		<input type = 'submit' value = 'Add Event'>
+		</form>
+
+	
